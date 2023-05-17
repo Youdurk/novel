@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baidu.novel.mapper.NovelMapper">
+<!--  用户查询时出现了自定义命名字段名 通过resultmap与实体类进行进行一个映射关系  -->
+    <resultMap id="getun" type="com.baidu.novel.entity.Novel">
+        <result column="id" property="id" />
+       <result column="b_name" property="bName" />
+        <result column="bookUrl" property="bookUrl"/>
+        <result column="author" property="author"/>
+        <result column="brief" property="brief"/>
+        <result column="u_id" property="uId"/>
+        <result column="b_type" property="bType"/>
+        <result column="heat" property="heat"/>
+        <collection property="chapters" javaType="java.util.List" ofType="com.baidu.novel.entity.Chapters">
+            <result column="cid" property="id"/>
+            <result column="ch" property="chapters"/>
+            <result column="cn" property="content"/>
+            <result column="sq" property="sequence"/>
+        </collection>
+    </resultMap>
+
+    <select id="Popular" resultType="com.baidu.novel.entity.Novel">
+       SELECT	* FROM b_table ORDER BY heat DESC LIMIT 6;
+    </select>
+    <select id="getun" resultMap="getun">
+        SELECT	b_table.*,bt.chapters AS ch,bt.`content` AS cn,bt.`sequence` AS sq,bt.`id` AS cid
+         FROM b_table
+        LEFT JOIN  b_chapters bt ON
+        bt.B_id=b_table.id
+         <where>
+        <if test="userid !=null and userid!=''">
+                u_id=#{userid}
+        </if>
+    </where>
+    </select>
+    <select id="getid" resultType="java.lang.Integer">
+        SELECT id FROM b_table WHERE b_name=#{tablename}
+    </select>
+    <select id="Popularfantasy" resultType="com.baidu.novel.entity.Novel">
+        SELECT	* FROM b_table WHERE b_type=#{btype} ORDER BY heat DESC LIMIT 6;
+    </select>
+</mapper>

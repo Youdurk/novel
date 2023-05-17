@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baidu.novel.mapper.CommentMapper">
+
+    <select id="finapage" resultType="com.baidu.novel.entity.Comment">
+SELECT comment.*,b_table.`b_name`,n_user.`nickname` FROM COMMENT
+LEFT JOIN b_table ON
+b_table.`id`=comment.`tableid`
+LEFT JOIN n_user ON
+n_user.`id`=comment.`userid`
+<where>
+    <if test="bname !=null and bname!=''">
+        b_table.`b_name` like concat('%',#{bname},'%')
+    </if>
+</where>
+LIMIT #{PageNum},#{PageSize}
+</select>
+<select id="readcommt" resultType="com.baidu.novel.entity.Comment">
+      SELECT comment.*,n_user.`nickname`,n_user.`avatarurl` FROM COMMENT
+        LEFT JOIN n_user ON
+        n_user.`id`=comment.`userid`
+        WHERE tableid=#{tableid}
+    </select>
+<select id="mycommt" resultType="com.baidu.novel.entity.Comment">
+        SELECT comment.*,b_table.`b_name` FROM COMMENT
+        LEFT JOIN b_table ON
+        b_table.`id`=comment.`tableid`
+        WHERE userid=#{userid}
+    </select>
+        </mapper>

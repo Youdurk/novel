@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baidu.novel.mapper.ChaptersMapper">
+
+
+    <select id="Finall"  resultType="com.baidu.novel.entity.Chapters">
+       SELECT bt.`b_name`,b_chapters.* FROM b_chapters LEFT JOIN b_table bt ON bt.`id`=b_chapters.`B_id`
+       <where>
+           <if test="bname !=null and bname!=''">
+             and bt.`b_name` like CONCAT('%',#{bname},'%')
+           </if>
+       </where>
+    </select>
+    <select id="reads" resultType="com.baidu.novel.entity.Chapters">
+        SELECT b_chapters.* FROM b_chapters
+        <if test="bid !=null and bid!=''">
+            <where> B_id=#{bid} AND
+              <if test="sequence !=null and sequence!=''">
+                  sequence=#{sequence}
+              </if>
+              </where>
+        </if>
+    </select>
+    <select id="catalogue" resultType="com.baidu.novel.entity.Chapters">
+        SELECT b_chapters.* FROM b_chapters
+        <if test="B_id !=null and B_id!=''">
+            <where> B_id=#{id}</where>
+        </if>
+    </select>
+
+    <select id="selectbid" resultType="com.baidu.novel.entity.Chapters">
+        SELECT id FROM b_chapters
+        <where>
+        <if test="bid !=null and bid !=''"></if>
+        b_id=#{bid}
+    </where>
+    </select>
+
+
+</mapper>
